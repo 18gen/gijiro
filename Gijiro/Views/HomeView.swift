@@ -11,36 +11,63 @@ struct HomeView: View {
     @State private var isAsking = false
     @State private var askAnswer = ""
     @State private var showAskResult = false
+    @FocusState private var isAskFieldFocused: Bool
 
     private let claudeService = ClaudeService()
 
+    static let quickPrompts: [QuickPrompt] = [
+        QuickPrompt(label: "List recent todos", icon: "pencil", prompt: "Please list all action items and todos from these recent meetings"),
+        QuickPrompt(label: "Summarize meetings", icon: "doc.text", prompt: "Please summarize my recent meetings into key points"),
+        QuickPrompt(label: "Write weekly recap", icon: "calendar", prompt: "Write a weekly recap based on my recent meetings"),
+    ]
+
     var body: some View {
-        VStack(spacing: 0) {
-            // Content
+        ZStack(alignment: .bottom) {
+            // Scrollable content
             ScrollView {
-                HStack(alignment: .firstTextBaseline) {
-                    Text("Coming up")
-                        .font(.system(size: 28, weight: .light))
-                        .padding(.horizontal, 24)
-                        .padding(.top, 20)
-                        .padding(.bottom, 12)
+                HStack {
+                    Text("Upcoming")
+                        .font(.system(size: 24, weight: .light, design: .serif))
+                    Spacer()
+                    Button("Show more") {
+                        // TODO: expand to show more events
+                    }
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+                    .buttonStyle(.plain)
                 }
+                .padding(.bottom, 12)
+                .padding(.horizontal, 36)
+                .frame(maxWidth: 800)
+
                 LazyVStack(alignment: .leading, spacing: 0) {
-                    // Calendar events
                     if GoogleAuthService.shared.isAuthenticated {
                         calendarEventsSection
                     }
+                }
+                .padding(.horizontal, 36)
+                .frame(maxWidth: 800)
+                
+                Divider()
+                    .padding(.vertical, 8)
 
-                    // Past notes
+                LazyVStack(alignment: .leading, spacing: 0) {
                     pastNotesSection
                 }
+                .padding(.top, 8)
+                .padding(.bottom, 100)
+                .padding(.horizontal, 36)
+                .frame(maxWidth: 800)
+            }
+            .onTapGesture {
+                isAskFieldFocused = false
             }
 
-            Divider()
-
-            // Bottom ask bar
-            bottomBar
+            // Bottom area: quick prompts + full-width background bar
+            bottomArea
         }
+        .navigationTitle("")
+        .toolbarBackground(.hidden, for: .windowToolbar)
         .task {
             if GoogleAuthService.shared.isAuthenticated {
                 await calendarService.refreshEvents()
@@ -59,9 +86,6 @@ struct HomeView: View {
             ForEach(allEvents) { event in
                 eventRow(event)
             }
-
-            Divider()
-                .padding(.vertical, 8)
         }
 
         if allEvents.isEmpty && !calendarService.isLoading {
@@ -72,7 +96,6 @@ struct HomeView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            .padding(.horizontal, 24)
             .padding(.vertical, 12)
         }
     }
@@ -84,36 +107,33 @@ struct HomeView: View {
             openOrCreateMeeting(for: event)
         } label: {
             HStack(spacing: 14) {
-                // Date badge
                 DateBadge(date: event.startDate)
 
-                // Event info
                 VStack(alignment: .leading, spacing: 3) {
                     Text(event.title)
-                        .font(.system(size: 17, weight: .medium))
+                        .font(.system(size: 14, weight: .light))
                         .lineLimit(1)
 
                     HStack(spacing: 4) {
                         if isNow {
                             Text("Now")
-                                .font(.system(size: 14))
-                                .foregroundStyle(.green)
+                                .font(.system(size: 12))
+                                .foregroundStyle(Theme.accent)
                                 .fontWeight(.medium)
                             Text("\u{00B7}")
-                                .font(.system(size: 14))
+                                .font(.system(size: 12))
                                 .foregroundStyle(.secondary)
                         }
                         Text(eventTimeText(event))
-                            .font(.system(size: 14))
+                            .font(.system(size: 12))
                             .foregroundStyle(.secondary)
                     }
                 }
 
                 Spacer()
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 14)
-            .background(isNow ? Color.green.opacity(0.05) : Color.clear)
+            .padding(.vertical, 8)
+            .background(isNow ? Theme.accent.opacity(0.05) : Color.clear)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -130,12 +150,14 @@ struct HomeView: View {
                 Calendar.current.startOfDay(for: meeting.startDate)
             }
             let sortedDates = grouped.keys.sorted(by: >)
+            
+            Text("History")
+                .font(.system(size: 24, weight: .light, design: .serif))
 
             ForEach(sortedDates, id: \.self) { date in
                 Text(dateHeader(date))
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 13, weight: .medium, design: .serif))
                     .foregroundStyle(.secondary)
-                    .padding(.horizontal, 24)
                     .padding(.top, 20)
                     .padding(.bottom, 6)
 
@@ -153,7 +175,6 @@ struct HomeView: View {
             selectedMeeting = meeting
         } label: {
             HStack(spacing: 14) {
-                // Document icon badge
                 Image(systemName: "doc.text")
                     .font(.system(size: 14))
                     .foregroundStyle(.secondary)
@@ -161,7 +182,6 @@ struct HomeView: View {
                     .background(Color(.systemGray).opacity(0.15))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                // Two-line layout: title + author
                 VStack(alignment: .leading, spacing: 2) {
                     Text(meeting.title)
                         .font(.system(size: 16))
@@ -174,7 +194,6 @@ struct HomeView: View {
 
                 Spacer()
 
-                // Lock + time
                 HStack(spacing: 8) {
                     Image(systemName: "lock")
                         .font(.caption2)
@@ -185,42 +204,92 @@ struct HomeView: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            .padding(.horizontal, 24)
             .padding(.vertical, 12)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
 
-    // MARK: - Bottom Bar
+    // MARK: - Bottom Area
 
-    private var bottomBar: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "sparkle")
-                .foregroundStyle(.purple)
-                .font(.caption)
-
-            TextField("Ask anything...", text: $askText)
-                .textFieldStyle(.plain)
-                .font(.callout)
-                .onSubmit {
-                    Task { await askQuestion() }
+    private var bottomArea: some View {
+        VStack(spacing: 0) {
+            // Quick prompts — expand upward above the bar
+            if isAskFieldFocused {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 0) {
+                        ForEach(Array(Self.quickPrompts.enumerated()), id: \.element.id) { index, prompt in
+                            if index > 0 {
+                                Divider()
+                                    .frame(height: 20)
+                                    .padding(.horizontal, 8)
+                            }
+                            QuickPromptButton(prompt: prompt) {
+                                runQuickPrompt(prompt)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
                 }
-
-            if isAsking {
-                ProgressView()
-                    .controlSize(.small)
+                .padding(.vertical, 12)
+                .background(Color(nsColor: .windowBackgroundColor).opacity(0.95))
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
 
-            Button("List recent todos") {
-                Task { await listTodos() }
+            // Full-width background bar
+            VStack(spacing: 0) {
+                // Frosted blur fade edge
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                    .mask(
+                        LinearGradient(
+                            colors: [.clear, .black],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .frame(height: 30)
+
+                // Text field pill
+                HStack(spacing: 10) {
+                    TextField("Ask anything", text: $askText)
+                        .textFieldStyle(.plain)
+                        .font(.body)
+                        .focused($isAskFieldFocused)
+                        .onSubmit {
+                            Task { await askQuestion() }
+                        }
+
+                    if isAsking {
+                        ProgressView()
+                            .controlSize(.small)
+                    } else if !askText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        SendButton(size: 32) {
+                            Task { await askQuestion() }
+                        }
+                    }
+
+                    // Collapsed: show first quick prompt inline
+                    if !isAskFieldFocused {
+                        QuickPromptPill(prompt: Self.quickPrompts[0]) {
+                            runQuickPrompt(Self.quickPrompts[0])
+                        }
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(Color(nsColor: .windowBackgroundColor).opacity(0.6))
+                .clipShape(RoundedRectangle(cornerRadius: 28))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28)
+                        .stroke(Theme.accent.opacity(0.3), lineWidth: 1)
+                )
+                .padding(.horizontal, 12)
+                .padding(.bottom, 10)
             }
-            .font(.caption)
-            .buttonStyle(.bordered)
-            .controlSize(.small)
+            .background(Color(nsColor: .windowBackgroundColor))
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .animation(.easeInOut(duration: 0.2), value: isAskFieldFocused)
         .popover(isPresented: $showAskResult) {
             ScrollView {
                 Text(askAnswer)
@@ -230,6 +299,59 @@ struct HomeView: View {
             }
             .frame(width: 400, height: 300)
         }
+    }
+
+    // MARK: - Actions
+
+    private func runQuickPrompt(_ prompt: QuickPrompt) {
+        askText = prompt.label
+        Task {
+            isAsking = true
+            let recentContext = meetings.prefix(5).map {
+                "Meeting: \($0.title)\nNotes: \($0.userNotes)\nAugmented: \($0.augmentedNotes)"
+            }.joined(separator: "\n---\n")
+
+            do {
+                let answer = try await claudeService.askQuestion(
+                    question: prompt.prompt,
+                    userNotes: recentContext,
+                    transcript: ""
+                )
+                askAnswer = answer
+                showAskResult = true
+            } catch {
+                askAnswer = "Error: \(error.localizedDescription)"
+                showAskResult = true
+            }
+            isAsking = false
+            askText = ""
+        }
+    }
+
+    private func askQuestion() async {
+        let question = askText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !question.isEmpty else { return }
+
+        isAsking = true
+
+        let recentContext = meetings.prefix(5).map {
+            "Meeting: \($0.title)\nNotes: \($0.userNotes)\nTranscript: \($0.rawTranscript)"
+        }.joined(separator: "\n---\n")
+
+        do {
+            let answer = try await claudeService.askQuestion(
+                question: question,
+                userNotes: recentContext,
+                transcript: ""
+            )
+            askAnswer = answer
+            showAskResult = true
+        } catch {
+            askAnswer = "Error: \(error.localizedDescription)"
+            showAskResult = true
+        }
+
+        isAsking = false
     }
 
     // MARK: - Helpers
@@ -273,88 +395,5 @@ struct HomeView: View {
         modelContext.insert(meeting)
         try? modelContext.save()
         selectedMeeting = meeting
-    }
-
-    private func askQuestion() async {
-        let question = askText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !question.isEmpty else { return }
-
-        isAsking = true
-
-        let recentContext = meetings.prefix(5).map {
-            "Meeting: \($0.title)\nNotes: \($0.userNotes)\nTranscript: \($0.rawTranscript)"
-        }.joined(separator: "\n---\n")
-
-        do {
-            let answer = try await claudeService.askQuestion(
-                question: question,
-                userNotes: recentContext,
-                transcript: ""
-            )
-            askAnswer = answer
-            showAskResult = true
-        } catch {
-            askAnswer = "Error: \(error.localizedDescription)"
-            showAskResult = true
-        }
-
-        isAsking = false
-    }
-
-    private func listTodos() async {
-        isAsking = true
-        askText = "List recent todos"
-
-        let recentContext = meetings.prefix(5).map {
-            "Meeting: \($0.title)\nNotes: \($0.userNotes)\nAugmented: \($0.augmentedNotes)"
-        }.joined(separator: "\n---\n")
-
-        do {
-            let answer = try await claudeService.askQuestion(
-                question: "Please list all action items and todos from these recent meetings",
-                userNotes: recentContext,
-                transcript: ""
-            )
-            askAnswer = answer
-            showAskResult = true
-        } catch {
-            askAnswer = "Error: \(error.localizedDescription)"
-            showAskResult = true
-        }
-
-        isAsking = false
-        askText = ""
-    }
-}
-
-// MARK: - Date Badge Component
-
-private struct DateBadge: View {
-    let date: Date
-
-    var body: some View {
-        VStack(spacing: 1) {
-            Text(monthAbbreviation)
-                .font(.system(size: 10, weight: .bold))
-                .foregroundStyle(.green)
-                .textCase(.uppercase)
-            Text(dayNumber)
-                .font(.system(size: 22, weight: .bold))
-        }
-        .frame(width: 44, height: 48)
-        .background(Color(.systemGray).opacity(0.15))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-
-    private var monthAbbreviation: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM"
-        return formatter.string(from: date)
-    }
-
-    private var dayNumber: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d"
-        return formatter.string(from: date)
     }
 }
