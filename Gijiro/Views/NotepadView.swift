@@ -97,7 +97,7 @@ struct NotepadView: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 10)
-                    .background(Color(red: 0.55, green: 0.55, blue: 0.15))
+                    .background(Theme.accent)
                     .clipShape(Capsule())
                 }
                 .buttonStyle(.plain)

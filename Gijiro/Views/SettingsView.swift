@@ -28,7 +28,7 @@ struct SettingsView: View {
                 HStack {
                     if GoogleAuthService.shared.isAuthenticated {
                         Label("Connected", systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
+                            .foregroundStyle(.blue)
                         Spacer()
                         Button("Sign Out") {
                             GoogleAuthService.shared.signOut()

@@ -26,6 +26,7 @@ struct MeetingHistoryView: View {
                 }
             }
         }
+        .navigationTitle("")
         .frame(minWidth: 350, minHeight: 300)
     }
 }
@@ -70,7 +71,7 @@ private struct StatusBadge: View {
         case "recording": .red
         case "transcribing": .orange
         case "augmenting": .purple
-        case "done": .green
+        case "done": Theme.accent
         default: .secondary
         }
     }
