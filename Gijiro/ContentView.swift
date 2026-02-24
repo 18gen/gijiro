@@ -1,59 +1,30 @@
-//
-//  ContentView.swift
-//  Gijiro
-//
-//  Created by Gen Ichihashi on 2026-02-22.
-//
-
 import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @State private var selectedScreen: SidebarScreen = .home
+    @State private var selectedMeeting: Meeting?
+    @State private var columnVisibility: NavigationSplitViewVisibility = .automatic
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+        if selectedMeeting != nil {
+            // Full-width notepad — no sidebar, no split view
+            NotepadView(meeting: selectedMeeting!, onClose: { selectedMeeting = nil })
+                .preferredColorScheme(.dark)
+                .frame(minWidth: 700, minHeight: 500)
+        } else {
+            NavigationSplitView(columnVisibility: $columnVisibility) {
+                SidebarView(selectedScreen: $selectedScreen, selectedMeeting: $selectedMeeting)
+            } detail: {
+                switch selectedScreen {
+                case .home:
+                    HomeView(selectedMeeting: $selectedMeeting)
+                case .history:
+                    MeetingHistoryView(selectedMeeting: $selectedMeeting)
                 }
             }
-        } detail: {
-            Text("Select an item")
+            .preferredColorScheme(.dark)
+            .frame(minWidth: 800, minHeight: 500)
         }
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
-    }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }

@@ -1,18 +1,14 @@
-//
-//  GijiroApp.swift
-//  Gijiro
-//
-//  Created by Gen Ichihashi on 2026-02-22.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
 struct GijiroApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Meeting.self,
+            TranscriptSegment.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -28,5 +24,22 @@ struct GijiroApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        .defaultSize(width: 1000, height: 700)
+
+        Settings {
+            SettingsView()
+        }
+    }
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls {
+            GoogleAuthService.shared.handleCallback(url: url)
+        }
     }
 }
