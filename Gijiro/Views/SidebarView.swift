@@ -13,13 +13,6 @@ struct SidebarView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // App branding
-            Text("Gijiro")
-                .font(.title3.weight(.semibold))
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
-                .padding(.bottom, 4)
-
             // Search field placeholder
             HStack {
                 Image(systemName: "magnifyingglass")
@@ -136,7 +129,7 @@ private struct SidebarItem: View {
         .buttonStyle(.plain)
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
-        .background(isSelected ? Color.accentColor.opacity(0.15) : Color.clear)
+        .background(isSelected ? Color.white.opacity(0.08) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 6))
         .padding(.horizontal, 4)
     }
