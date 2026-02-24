@@ -46,7 +46,6 @@ struct NotepadBottomBar: View {
                         isRecording: coordinator.isRecording
                     )
 
-                    // Expand/collapse transcript panel
                     Button {
                         showTranscriptPanel.toggle()
                     } label: {
@@ -56,7 +55,6 @@ struct NotepadBottomBar: View {
                     }
                     .buttonStyle(.plain)
 
-                    // Start/Stop text button
                     Button {
                         Task {
                             if coordinator.isRecording {
@@ -69,7 +67,7 @@ struct NotepadBottomBar: View {
                         Text(coordinator.isRecording ? "Pause" : "Resume")
                             .font(.callout)
                             .fontWeight(.medium)
-                            .foregroundStyle(coordinator.isRecording ? .green : .secondary)
+                            .foregroundStyle(coordinator.isRecording ? Theme.accent : .secondary)
                     }
                     .buttonStyle(.plain)
                 }
@@ -79,13 +77,19 @@ struct NotepadBottomBar: View {
                 .clipShape(Capsule())
 
                 // Center: Ask anything
-                HStack(spacing: 4) {
+                HStack(spacing: 6) {
                     TextField("Ask anything", text: $askText)
                         .textFieldStyle(.plain)
                         .font(.callout)
                         .onSubmit {
                             Task { await askQuestion() }
                         }
+
+                    if !askText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        SendButton(size: 30) {
+                            Task { await askQuestion() }
+                        }
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -105,7 +109,7 @@ struct NotepadBottomBar: View {
                     HStack(spacing: 6) {
                         Image(systemName: "pencil")
                             .font(.caption)
-                            .foregroundStyle(.purple)
+                            .foregroundStyle(Theme.accent)
                         Text("Suggest topics")
                             .font(.callout)
                     }
@@ -222,46 +226,5 @@ struct NotepadBottomBar: View {
         }
 
         isSuggesting = false
-    }
-}
-
-// MARK: - Audio Waveform Bars
-
-struct AudioWaveformBars: View {
-    let audioLevel: Float
-    let isRecording: Bool
-
-    private let barCount = 4
-    private let barScales: [Float] = [0.6, 1.0, 0.8, 0.5]
-    private let minBarHeight: CGFloat = 0.2
-    private let maxBarHeight: CGFloat = 16
-
-    var body: some View {
-        HStack(spacing: 2) {
-            ForEach(0..<barCount, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 1.5)
-                    .fill(isRecording ? Color.green : Color.secondary.opacity(0.3))
-                    .frame(
-                        width: 3,
-                        height: barHeight(for: index)
-                    )
-                    .animation(
-                        .easeInOut(duration: 0.08),
-                        value: audioLevel
-                    )
-            }
-        }
-        .frame(width: 20, height: maxBarHeight)
-    }
-
-    private func barHeight(for index: Int) -> CGFloat {
-        if !isRecording {
-            return maxBarHeight * minBarHeight * CGFloat(barScales[index])
-        }
-
-        let scale = CGFloat(barScales[index])
-        let level = CGFloat(audioLevel)
-        let height = max(minBarHeight, level * scale) * maxBarHeight
-        return min(height, maxBarHeight)
     }
 }
