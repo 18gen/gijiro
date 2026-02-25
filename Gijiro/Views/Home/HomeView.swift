@@ -48,6 +48,7 @@ struct HomeView: View {
                 onAsk: { Task { await vm.ask(meetings: meetings, prompt: vm.askText) } },
                 onQuickPrompt: { prompt in Task { await vm.runQuickPrompt(meetings: meetings, prompt: prompt) } }
             )
+            .padding(.bottom, 8)
         }
         .toolbarBackground(.hidden, for: .windowToolbar)
         .task { await vm.onAppear() }
