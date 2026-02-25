@@ -17,10 +17,10 @@ struct ContentView: View {
                 SidebarView(selectedScreen: $selectedScreen, selectedMeeting: $selectedMeeting)
             } detail: {
                 switch selectedScreen {
-                case .home:
-                    HomeView(selectedMeeting: $selectedMeeting)
-                case .history:
-                    MeetingHistoryView(selectedMeeting: $selectedMeeting)
+                    case .home:
+                        HomeView(selectedMeeting: $selectedMeeting)
+                    default:
+                        EmptyView()
                 }
             }
             .preferredColorScheme(.dark)

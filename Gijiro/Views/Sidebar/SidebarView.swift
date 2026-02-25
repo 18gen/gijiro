@@ -59,15 +59,6 @@ struct SidebarView: View {
                 selectedScreen = .home
             }
 
-            SidebarItem(
-                title: "Meeting History",
-                icon: "clock",
-                isSelected: selectedScreen == .history && selectedMeeting == nil
-            ) {
-                selectedMeeting = nil
-                selectedScreen = .history
-            }
-
             Divider()
                 .padding(.vertical, 4)
 
