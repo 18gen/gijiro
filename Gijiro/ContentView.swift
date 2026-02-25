@@ -11,7 +11,7 @@ struct ContentView: View {
             // Full-width notepad — no sidebar, no split view
             NotepadView(meeting: selectedMeeting!, onClose: { selectedMeeting = nil })
                 .preferredColorScheme(.dark)
-                .frame(minWidth: 700, minHeight: 500)
+                .frame(minWidth: 500, minHeight: 350)
         } else {
             NavigationSplitView(columnVisibility: $columnVisibility) {
                 SidebarView(selectedScreen: $selectedScreen, selectedMeeting: $selectedMeeting)
@@ -24,7 +24,7 @@ struct ContentView: View {
                 }
             }
             .preferredColorScheme(.dark)
-            .frame(minWidth: 800, minHeight: 500)
+            .frame(minWidth: 500, minHeight: 350)
         }
     }
 }

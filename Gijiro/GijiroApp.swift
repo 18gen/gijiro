@@ -23,6 +23,7 @@ struct GijiroApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowStyle(.hiddenTitleBar)
         .modelContainer(sharedModelContainer)
         .defaultSize(width: 1000, height: 700)
 
