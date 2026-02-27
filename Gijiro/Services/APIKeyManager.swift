@@ -1,15 +1,15 @@
 import Foundation
 
 enum APIKeyManager {
-    static var whisperAPIKey: String {
-        AppSettings.shared.whisperAPIKey
+    nonisolated static var whisperAPIKey: String {
+        UserDefaults.standard.string(forKey: "whisperAPIKey") ?? ""
     }
 
-    static var claudeAPIKey: String {
-        AppSettings.shared.claudeAPIKey
+    nonisolated static var claudeAPIKey: String {
+        UserDefaults.standard.string(forKey: "claudeAPIKey") ?? ""
     }
 
-    static var deepgramAPIKey: String {
-        AppSettings.shared.deepgramAPIKey
+    nonisolated static var deepgramAPIKey: String {
+        UserDefaults.standard.string(forKey: "deepgramAPIKey") ?? ""
     }
 }

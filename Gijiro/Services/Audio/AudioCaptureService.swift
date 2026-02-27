@@ -121,15 +121,17 @@ final class AudioCaptureService: NSObject, @unchecked Sendable {
         )
         print("[AudioCapture] Default output device ID: \(defaultOutputID), err=\(Self.describeOSStatus(err))")
 
-        var outputUIDCF: CFString = "" as CFString
+        var outputUIDCF: CFString?
         var uidAddress = AudioObjectPropertyAddress(
             mSelector: kAudioDevicePropertyDeviceUID,
             mScope: kAudioObjectPropertyScopeGlobal,
             mElement: kAudioObjectPropertyElementMain
         )
-        propSize = UInt32(MemoryLayout<CFString>.size)
-        err = AudioObjectGetPropertyData(defaultOutputID, &uidAddress, 0, nil, &propSize, &outputUIDCF)
-        let outputUID = outputUIDCF as String
+        propSize = UInt32(MemoryLayout<CFString?>.size)
+        err = withUnsafeMutablePointer(to: &outputUIDCF) { uidPtr in
+            AudioObjectGetPropertyData(defaultOutputID, &uidAddress, 0, nil, &propSize, uidPtr)
+        }
+        let outputUID = outputUIDCF as String? ?? ""
         print("[AudioCapture] Default output device UID: \(outputUID), err=\(Self.describeOSStatus(err))")
 
         // 4. Create aggregate device with the tap bound to the output device
