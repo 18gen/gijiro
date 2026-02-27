@@ -13,41 +13,55 @@ struct SidebarView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Search field placeholder
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.secondary)
-                Text("Search")
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text("\u{2318}K")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 2)
-                    .background(Color.secondary.opacity(0.15))
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-            }
-            .font(.caption)
-            .padding(8)
-            .background(Color.secondary.opacity(0.1))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .padding(.horizontal, 12)
-            .padding(.top, 8)
+            HStack(spacing: 5) {
+                // Search "pill"
+                Button {
+                    // open search / focus search field
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundStyle(.secondary)
 
-            // Compose button
-            Button {
-                createQuickNote()
-            } label: {
-                Label("New Note", systemImage: "square.and.pencil")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+                        Text("Search")
+                            .foregroundStyle(.secondary)
 
-            Divider()
-                .padding(.vertical, 4)
+                        Spacer(minLength: 0)
+
+                        Text("⌘K")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+//                    .background(Color.secondary.opacity(0.10))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.secondary.opacity(0.18), lineWidth: 0.5)
+                    )
+                    .contentShape(RoundedRectangle(cornerRadius: 10)) // nicer click area
+                }
+                .buttonStyle(.plain)
+
+                // Pencil button (simple circle)
+                Button {
+                    createQuickNote()
+                } label: {
+                    Image(systemName: "pencil")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 24, height: 24)
+                        .background(Color.secondary.opacity(0.10))
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke(Color.secondary.opacity(0.18), lineWidth: 1)
+                        )
+                        .contentShape(Circle())
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 10)
+            .padding(.bottom, 10)
 
             // Navigation items
             SidebarItem(
@@ -99,7 +113,7 @@ struct SidebarView: View {
     }
 
     private func createQuickNote() {
-        let meeting = Meeting(title: "Quick Note")
+        let meeting = Meeting(title: "")
         modelContext.insert(meeting)
         try? modelContext.save()
         selectedMeeting = meeting
