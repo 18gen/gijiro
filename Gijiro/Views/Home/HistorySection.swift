@@ -16,16 +16,14 @@ struct HistorySection: View {
         let grouped = Dictionary(grouping: pastMeetings) { Calendar.current.startOfDay(for: $0.startDate) }
         let dates = grouped.keys.sorted(by: >)
 
-        VStack(alignment: .leading, spacing: 3) {
-            Text("History")
-                .font(.system(size: 24, weight: .light, design: .serif))
-
+        VStack(alignment: .leading, spacing: 4) {
             ForEach(dates, id: \.self) { date in
                 Text(DateHeaderFormatter.string(date))
                     .font(.system(size: 13, weight: .medium, design: .serif))
                     .foregroundStyle(.secondary)
                     .padding(.top, 20)
                     .padding(.bottom, 6)
+                    .padding(.horizontal, 5)
 
                 ForEach(grouped[date] ?? []) { meeting in
                     row(meeting)
@@ -51,16 +49,11 @@ struct HistorySection: View {
 
                 Spacer()
 
-                HStack(spacing: 8) {
-                    Image(systemName: "lock")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-
-                    Text(meeting.startDate.formatted(date: .omitted, time: .shortened))
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
-                }
+                Text(meeting.startDate.formatted(date: .omitted, time: .shortened))
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 }
