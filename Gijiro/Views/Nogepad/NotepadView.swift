@@ -31,22 +31,23 @@ private extension NotepadView {
     var content: some View {
         ScrollView {
             VStack(spacing: 5) {
-                TextField("No Title", text: $meeting.title)
-                    .textFieldStyle(.plain)
-                    .font(.system(.largeTitle, design: .serif))
-                    .padding(.top, 16)
                 
                 metadataRow
+                    .padding(.horizontal, 4)
+                    .padding(.top, 10)
+                    .padding(.bottom, 24)
                 
                 ZStack(alignment: .topLeading) {
                     if meeting.userNotes.isEmpty {
                         Text("Write notes")
-                            .font(.system(size: 14))
+                            .font(.system(size: 16, weight: .light))
                             .foregroundStyle(.tertiary)
                             .disabled(true)
+                            .padding(.horizontal, 4)
                     }
                     TextEditor(text: $meeting.userNotes)
-                        .font(.system(size: 14))
+                        .font(.system(size: 16, weight: .light))
+                        .lineSpacing(3)
                         .scrollContentBackground(.hidden)
                 }
                 .frame(maxHeight: .infinity)
@@ -60,23 +61,28 @@ private extension NotepadView {
                         .padding(.bottom, 4)
                 }
             }
+            .frame(maxWidth: 800)
         }
     }
 
     var metadataRow: some View {
-        HStack(spacing: 8) {
-            Label(dateBadgeText, systemImage: "calendar")
-                .metadataButtonStyle()
-
-            if let attendeesLabelText {
-                Label(attendeesLabelText, systemImage: "person.2")
+        VStack(spacing: 10) {
+            TextField("No Title", text: $meeting.title)
+                .textFieldStyle(.plain)
+                .font(.system(.title, design: .serif))
+            
+            HStack(spacing: 4) {
+                Label(dateBadgeText, systemImage: "calendar")
                     .metadataButtonStyle()
-            }
 
-            Spacer()
+                if let attendeesLabelText {
+                    Label(attendeesLabelText, systemImage: "person.2")
+                        .metadataButtonStyle()
+                }
+
+                Spacer()
+            }
         }
-        .padding(.top, 4)
-        .padding(.bottom, 8)
     }
 
     var overlay: some View {
