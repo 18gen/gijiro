@@ -13,53 +13,34 @@ struct SidebarView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 5) {
-                // Search "pill"
-                Button {
-                    // open search / focus search field
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundStyle(.secondary)
-
-                        Text("Search")
-                            .foregroundStyle(.secondary)
-
-                        Spacer(minLength: 0)
-
-                        Text("⌘K")
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
-                    }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-//                    .background(Color.secondary.opacity(0.10))
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.secondary.opacity(0.18), lineWidth: 0.5)
-                    )
-                    .contentShape(RoundedRectangle(cornerRadius: 10)) // nicer click area
-                }
-                .buttonStyle(.plain)
-
-                // Pencil button (simple circle)
-                Button {
-                    createQuickNote()
-                } label: {
-                    Image(systemName: "pencil")
-                        .font(.system(size: 13, weight: .semibold))
+            // Search "pill"
+            Button {
+                // open search / focus search field
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "magnifyingglass")
                         .foregroundStyle(.secondary)
-                        .frame(width: 24, height: 24)
-                        .background(Color.secondary.opacity(0.10))
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle().stroke(Color.secondary.opacity(0.18), lineWidth: 1)
-                        )
-                        .contentShape(Circle())
+
+                    Text("Search")
+                        .foregroundStyle(.secondary)
+
+                    Spacer(minLength: 0)
+
+                    Text("⌘K")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
                 }
-                .buttonStyle(.plain)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+//                    .background(Color.secondary.opacity(0.10))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.secondary.opacity(0.18), lineWidth: 0.5)
+                )
+                .contentShape(RoundedRectangle(cornerRadius: 10)) // nicer click area
             }
+            .buttonStyle(.plain)
             .padding(.horizontal, 10)
             .padding(.bottom, 10)
 
