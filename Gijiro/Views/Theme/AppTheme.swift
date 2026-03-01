@@ -11,6 +11,9 @@ enum AppTheme {
     // primary accent (blue)
     static let primary = Color.accentColor // set Accent Color in Assets to your blue
 
+    // background
+    static let background = Color(red: 33/255.0, green: 33/255.0, blue: 33/255.0)
+
     // surfaces
     static let surfaceFill = Color.primary.opacity(0.06)
     static let surfaceStroke = Color.white.opacity(0.10)

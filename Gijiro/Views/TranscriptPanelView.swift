@@ -109,7 +109,7 @@ struct TranscriptPanelView: View {
                 }
             }
         }
-        .background(Color(nsColor: .windowBackgroundColor).opacity(0.95))
+        .background(AppTheme.background)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(
             RoundedRectangle(cornerRadius: 12)

@@ -39,7 +39,7 @@ struct HomeView: View {
             .onTapGesture { askFocused = false }
 
             floatingAskBar
-                .background(Rectangle().fill(.background))
+                .background(AppTheme.background)
         }
         .toolbarBackground(.hidden, for: .windowToolbar)
         .task { await vm.onAppear() }
@@ -97,7 +97,6 @@ private extension HomeView {
                 }
             }
         }
-        .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 27, style: .continuous))
         .frame(maxWidth: 700)
         .overlay(
