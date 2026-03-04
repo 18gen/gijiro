@@ -38,7 +38,7 @@ struct HistorySection: View {
                 IconBadge()
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(meeting.title)
+                    Text(meeting.title.isEmpty ? "New Note" : meeting.title)
                         .font(.system(size: 14))
                         .lineLimit(1)
 
