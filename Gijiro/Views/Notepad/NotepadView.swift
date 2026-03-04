@@ -29,45 +29,43 @@ struct NotepadView: View {
 // MARK: - Subviews
 private extension NotepadView {
     var content: some View {
-        ScrollView {
-            VStack(spacing: 5) {
-                
-                metadataRow
-                    .padding(.horizontal, 4)
-                    .padding(.top, 10)
-                    .padding(.bottom, 24)
-                
-                ZStack(alignment: .topLeading) {
-                    if meeting.userNotes.isEmpty {
+        VStack(spacing: 5) {
+            metadataRow
+                .padding(.horizontal, 4)
+                .padding(.top, 10)
+                .padding(.bottom, 24)
+
+            ZStack(alignment: .topLeading) {
+                if meeting.userNotes.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
                         Text("Write notes")
                             .font(.system(size: 16, weight: .light))
                             .foregroundStyle(.tertiary)
-                            .disabled(true)
-                            .padding(.horizontal, 4)
+                        Text("Type  /  for commands")
+                            .font(.system(size: 13, weight: .regular))
+                            .foregroundStyle(.quaternary)
                     }
-                    TextEditor(text: $meeting.userNotes)
-                        .font(.system(size: 16, weight: .light))
-                        .lineSpacing(3)
-                        .scrollContentBackground(.hidden)
+                    .disabled(true)
+                    .padding(.horizontal, 4)
                 }
-                .frame(maxHeight: .infinity)
-                .padding(.bottom, 120)
-                
-                if let augmentError {
-                    Text(augmentError)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 4)
-                }
+                MarkdownTextEditor(text: $meeting.userNotes)
             }
-            .frame(maxWidth: 800)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            if let augmentError {
+                Text(augmentError)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 4)
+            }
         }
+        .frame(maxWidth: 800)
     }
 
     var metadataRow: some View {
         VStack(spacing: 10) {
-            TextField("No Title", text: $meeting.title)
+            TextField("New Note", text: $meeting.title)
                 .textFieldStyle(.plain)
                 .font(.system(.title, design: .serif))
             
