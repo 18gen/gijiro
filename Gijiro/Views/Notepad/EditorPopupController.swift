@@ -148,15 +148,7 @@ final class EditorPopupController {
         }
 
         // Build new line
-        let newLine: String
-        if command == .divider {
-            newLine = "---\n"
-        } else if command == .codeBlock {
-            let content = stripped.trimmingCharacters(in: .newlines)
-            newLine = "```\n\(content)\n```\n"
-        } else {
-            newLine = command.prefix + stripped
-        }
+        let newLine = command.prefix + stripped
 
         if textView.shouldChangeText(in: lineRange, replacementString: newLine) {
             textStorage.replaceCharacters(in: lineRange, with: newLine)
