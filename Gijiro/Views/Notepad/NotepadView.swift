@@ -43,7 +43,7 @@ private extension NotepadView {
                             .foregroundStyle(.tertiary)
                         Text("Type  /  for commands")
                             .font(.system(size: 13, weight: .regular))
-                            .foregroundStyle(.quaternary)
+                            .foregroundStyle(.tertiary)
                     }
                     .disabled(true)
                     .padding(.horizontal, 4)
@@ -68,6 +68,7 @@ private extension NotepadView {
             TextField("New Note", text: $meeting.title)
                 .textFieldStyle(.plain)
                 .font(.system(.title, design: .serif))
+                .foregroundStyle(.primary)
             
             HStack(spacing: 4) {
                 Label(dateBadgeText, systemImage: "calendar")
