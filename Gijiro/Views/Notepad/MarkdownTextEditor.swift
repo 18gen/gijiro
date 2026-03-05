@@ -37,8 +37,8 @@ struct MarkdownTextEditor: NSViewRepresentable {
         textView.delegate = context.coordinator
         textView.textStorage?.delegate = context.coordinator
 
-        // Initial content
-        textView.string = text
+        // Initial content (convert markdown to visual prefixes)
+        textView.string = MarkdownVisualizer.markdownToVisual(text)
         styler.applyFullDocument(textView.textStorage!)
 
         // Wire up popup controller
@@ -47,7 +47,7 @@ struct MarkdownTextEditor: NSViewRepresentable {
         coordinator.popupController.onTextTransform = { [weak coordinator] in
             guard let coordinator, let tv = coordinator.popupController.textView else { return }
             coordinator.isUpdating = true
-            coordinator.parent.text = tv.string
+            coordinator.parent.text = MarkdownVisualizer.visualToMarkdown(tv.string)
             coordinator.isUpdating = false
         }
 
@@ -80,11 +80,12 @@ struct MarkdownTextEditor: NSViewRepresentable {
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
         guard let textView = scrollView.documentView as? NSTextView else { return }
         guard !context.coordinator.isUpdating else { return }
-        guard textView.string != text else { return }
+        let visualText = MarkdownVisualizer.markdownToVisual(text)
+        guard textView.string != visualText else { return }
 
         context.coordinator.isUpdating = true
         let selectedRanges = textView.selectedRanges
-        textView.string = text
+        textView.string = visualText
         textView.selectedRanges = selectedRanges
         styler.applyFullDocument(textView.textStorage!)
         context.coordinator.isUpdating = false
@@ -126,9 +127,9 @@ struct MarkdownTextEditor: NSViewRepresentable {
             guard !isUpdating else { return }
             guard let textView = notification.object as? NSTextView else { return }
 
-            // Sync binding
+            // Sync binding (convert visual back to markdown)
             isUpdating = true
-            parent.text = textView.string
+            parent.text = MarkdownVisualizer.visualToMarkdown(textView.string)
             isUpdating = false
 
             // Slash menu detection

@@ -52,9 +52,18 @@ enum BlockCommand: String, CaseIterable, Identifiable {
         }
     }
 
-    // Regex to detect any existing block prefix at line start
+    var visualPrefix: String {
+        switch self {
+        case .bulletList:   return "• "
+        case .numberedList: return "1. "
+        case .todoList:     return "☐ "
+        default:            return prefix
+        }
+    }
+
+    // Regex to detect any existing block prefix at line start (visual prefixes)
     static let prefixPattern = try! NSRegularExpression(
-        pattern: #"^(#{1,3} |[-*+] \[[ x]\] |[-*+] |\d+\. )"#,
+        pattern: #"^(#{1,3} |☐ |☑ |• |\d+\. )"#,
         options: .anchorsMatchLines
     )
 }

@@ -147,8 +147,8 @@ final class EditorPopupController {
             stripped = String((lineContent as NSString).substring(from: match.range.upperBound))
         }
 
-        // Build new line
-        let newLine = command.prefix + stripped
+        // Build new line (use visual prefix for display)
+        let newLine = command.visualPrefix + stripped
 
         if textView.shouldChangeText(in: lineRange, replacementString: newLine) {
             textStorage.replaceCharacters(in: lineRange, with: newLine)

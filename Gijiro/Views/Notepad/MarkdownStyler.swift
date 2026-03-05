@@ -160,33 +160,31 @@ struct MarkdownStyler {
             })
         }
 
-        // --- Lists ---
+        // --- Lists (matching visual prefixes) ---
 
-        // To-Do: - [ ] item, - [x] item
-        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)([-*+] \\[[ x]\\] )(.*)$", options: .anchorsMatchLines) {
+        // To-Do: ☐ item, ☑ item
+        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)(☐ |☑ )(.*)$", options: .anchorsMatchLines) {
             rules.append(MarkdownRule(regex: regex) { match, ts in
                 let paraStyle = NSMutableParagraphStyle()
                 paraStyle.lineSpacing = theme.bodyLineSpacing
                 paraStyle.headIndent = theme.listIndent
                 paraStyle.firstLineHeadIndent = 0
                 ts.addAttribute(.paragraphStyle, value: paraStyle, range: match.range)
-                hideSyntax(ts, range: match.range(at: 2), theme: theme)
             })
         }
 
-        // Unordered: - item, * item, + item
-        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)([-*+] )(.*)$", options: .anchorsMatchLines) {
+        // Unordered: • item
+        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)(• )(.*)$", options: .anchorsMatchLines) {
             rules.append(MarkdownRule(regex: regex) { match, ts in
                 let paraStyle = NSMutableParagraphStyle()
                 paraStyle.lineSpacing = theme.bodyLineSpacing
                 paraStyle.headIndent = theme.listIndent
                 paraStyle.firstLineHeadIndent = 0
                 ts.addAttribute(.paragraphStyle, value: paraStyle, range: match.range)
-                hideSyntax(ts, range: match.range(at: 2), theme: theme)
             })
         }
 
-        // Ordered: 1. item
+        // Ordered: 1. item (numbers stay visible as the indicator)
         if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)(\\d+\\. )(.*)$", options: .anchorsMatchLines) {
             rules.append(MarkdownRule(regex: regex) { match, ts in
                 let paraStyle = NSMutableParagraphStyle()
@@ -194,7 +192,6 @@ struct MarkdownStyler {
                 paraStyle.headIndent = theme.listIndent
                 paraStyle.firstLineHeadIndent = 0
                 ts.addAttribute(.paragraphStyle, value: paraStyle, range: match.range)
-                hideSyntax(ts, range: match.range(at: 2), theme: theme)
             })
         }
 
