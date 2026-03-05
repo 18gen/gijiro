@@ -18,7 +18,8 @@ struct MarkdownTheme {
     let textColor: NSColor
     let syntaxDimColor: NSColor
     let linkColor: NSColor
-    let blockquoteColor: NSColor
+    let hiddenFont: NSFont
+    let hiddenColor: NSColor
     let bodyLineSpacing: CGFloat
     let headingLineSpacing: CGFloat
     let listIndent: CGFloat
@@ -36,7 +37,8 @@ struct MarkdownTheme {
         textColor: NSColor.white.withAlphaComponent(0.85),
         syntaxDimColor: NSColor.white.withAlphaComponent(0.25),
         linkColor: NSColor(red: 0.40, green: 0.55, blue: 0.68, alpha: 1.0),
-        blockquoteColor: NSColor.white.withAlphaComponent(0.50),
+        hiddenFont: .systemFont(ofSize: 0.01),
+        hiddenColor: .clear,
         bodyLineSpacing: 3,
         headingLineSpacing: 6,
         listIndent: 20
