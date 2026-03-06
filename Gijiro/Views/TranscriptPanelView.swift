@@ -135,8 +135,8 @@ private struct TranscriptBubble: View {
     private var bubbleColor: Color {
         if isPartial { return Color.secondary.opacity(0.06) }
         return isSystem
-            ? Theme.accent.opacity(0.10)
-            : Theme.accent.opacity(0.10)
+            ? AppTheme.accent.opacity(0.10)
+            : AppTheme.accent.opacity(0.10)
     }
 
     var body: some View {

@@ -6,13 +6,19 @@
 //
 
 import SwiftUI
+import AppKit
 
 enum AppTheme {
     // primary accent (blue)
     static let primary = Color.accentColor // set Accent Color in Assets to your blue
 
+    // brand accent (muted slate blue)
+    static let accentNS = NSColor(red: 0.40, green: 0.55, blue: 0.68, alpha: 1.0)
+    static let accent = Color(nsColor: accentNS)
+
     // background
-    static let background = Color(red: 33/255.0, green: 33/255.0, blue: 33/255.0)
+    static let backgroundNS = NSColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
+    static let background = Color(nsColor: backgroundNS)
 
     // surfaces
     static let surfaceFill = Color.primary.opacity(0.06)

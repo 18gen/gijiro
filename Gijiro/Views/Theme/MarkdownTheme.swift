@@ -36,7 +36,7 @@ struct MarkdownTheme {
         codeBackground: NSColor.white.withAlphaComponent(0.06),
         textColor: NSColor.white.withAlphaComponent(0.85),
         syntaxDimColor: NSColor.white.withAlphaComponent(0.25),
-        linkColor: NSColor(red: 0.40, green: 0.55, blue: 0.68, alpha: 1.0),
+        linkColor: AppTheme.accentNS,
         hiddenFont: .systemFont(ofSize: 0.01),
         hiddenColor: .clear,
         bodyLineSpacing: 3,

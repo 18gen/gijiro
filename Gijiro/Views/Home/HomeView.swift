@@ -147,9 +147,9 @@ private struct TrayPromptButton: View {
             HStack(spacing: 8) {
                 Image(systemName: prompt.icon)
                     .font(.caption)
-                    .foregroundStyle(Theme.accent)
+                    .foregroundStyle(AppTheme.accent)
                     .padding(5)
-                    .background(Theme.accent.opacity(0.15))
+                    .background(AppTheme.accent.opacity(0.15))
                     .clipShape(RoundedRectangle(cornerRadius: 5))
                 Text(prompt.label)
                     .font(.body)

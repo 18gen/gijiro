@@ -13,7 +13,7 @@ struct AudioWaveformBars: View {
         HStack(spacing: 2) {
             ForEach(0..<barCount, id: \.self) { index in
                 RoundedRectangle(cornerRadius: 1.5)
-                    .fill(isRecording ? Theme.accent : Color.secondary.opacity(0.3))
+                    .fill(isRecording ? AppTheme.accent : Color.secondary.opacity(0.3))
                     .frame(
                         width: 3,
                         height: barHeight(for: index)

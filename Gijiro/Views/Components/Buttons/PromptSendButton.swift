@@ -10,7 +10,7 @@ struct PromptSendButton: View {
                 .font(.system(size: size * 0.8, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: size, height: size)
-                .background(Theme.accent)
+                .background(AppTheme.accent)
                 .clipShape(Circle())
         }
         .buttonStyle(.plain)

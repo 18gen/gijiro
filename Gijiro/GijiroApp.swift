@@ -39,7 +39,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
         DispatchQueue.main.async {
             for window in NSApp.windows {
-                window.backgroundColor = NSColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
+                window.backgroundColor = AppTheme.backgroundNS
             }
         }
     }

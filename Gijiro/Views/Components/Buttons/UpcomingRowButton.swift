@@ -86,7 +86,7 @@ struct UpcomingRowButtonEventContent: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             RoundedRectangle(cornerRadius: 2, style: .continuous)
-                .fill(isNow ? Theme.accent : Color.cyan.opacity(0.75))
+                .fill(isNow ? AppTheme.accent : Color.cyan.opacity(0.75))
                 .frame(width: 3)
                 .padding(.vertical, 1)
 
@@ -99,15 +99,15 @@ struct UpcomingRowButtonEventContent: View {
                     if isNow {
                         Text("Now")
                             .font(.system(size: 12))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(AppTheme.accent)
                         Text("·")
                             .font(.system(size: 12))
-                            .foregroundStyle(Theme.accent)
+                            .foregroundStyle(AppTheme.accent)
                     }
 
                     Text(EventTimeFormatter.string(for: event))
                         .font(.system(size: 12))
-                        .foregroundStyle(isNow ? Theme.accent : .secondary)
+                        .foregroundStyle(isNow ? AppTheme.accent : .secondary)
                         .lineLimit(1)
                 }
             }

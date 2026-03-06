@@ -160,7 +160,7 @@ private extension NotepadView {
 
     func applyWindowOpacity() {
         guard let window = (NSApp.windows.first { $0.isKeyWindow } ?? NSApp.windows.first) else { return }
-        let bgColor = NSColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
+        let bgColor = AppTheme.backgroundNS
         let level = Self.opacityLevels[opacityIndex]
         if level >= 1 {
             window.isOpaque = true

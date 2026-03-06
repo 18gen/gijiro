@@ -8,7 +8,7 @@ struct DateBadge: View {
             Text(monthAbbreviation)
                 .font(.system(size: 6, weight: .semibold, design: .rounded))
                 .tracking(0.4)
-                .foregroundStyle(Theme.accent.opacity(0.95))
+                .foregroundStyle(AppTheme.accent.opacity(0.95))
                 .textCase(.uppercase)
                 .padding(.top, 1)
 
