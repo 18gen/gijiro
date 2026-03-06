@@ -16,7 +16,7 @@ final class HomeViewModel: ObservableObject {
     @Published var showAskResult = false
     @Published var isAskFieldFocused = false
 
-    let claudeService = ClaudeService()
+    let claudeService = ClaudeService.shared
     let calendarService = GoogleCalendarService.shared
 
     static let quickPrompts: [QuickPrompt] = [

@@ -1,6 +1,8 @@
 import Foundation
 
 actor ClaudeService {
+    static let shared = ClaudeService()
+
     private let endpoint = URL(string: "https://api.anthropic.com/v1/messages")!
     private let model = "claude-sonnet-4-20250514"
 
@@ -72,7 +74,7 @@ actor ClaudeService {
     // MARK: - Private
 
     private func sendRequest(systemPrompt: String, userMessage: String) async throws -> String {
-        let apiKey = APIKeyManager.claudeAPIKey
+        let apiKey = AppSettings.claudeKey
         guard !apiKey.isEmpty else { throw ClaudeError.noAPIKey }
 
         var request = URLRequest(url: endpoint)

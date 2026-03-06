@@ -23,7 +23,7 @@ struct NotepadBottomBar: View {
 
     @FocusState private var askFocused: Bool
 
-    private let claudeService = ClaudeService()
+    private let claudeService = ClaudeService.shared
 
     // example receipts (you’ll replace these)
     private var receipts: [Receipt] {

@@ -29,7 +29,7 @@ actor WhisperService {
     }
 
     func transcribe(audioData: Data) async throws -> VerboseResult {
-        let apiKey = APIKeyManager.whisperAPIKey
+        let apiKey = AppSettings.whisperKey
         guard !apiKey.isEmpty else { throw WhisperError.noAPIKey }
 
         let boundary = UUID().uuidString

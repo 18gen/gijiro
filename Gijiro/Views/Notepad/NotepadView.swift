@@ -12,7 +12,7 @@ struct NotepadView: View {
     @State private var augmentError: String?
     @State private var opacityIndex = 0
 
-    private let claudeService = ClaudeService()
+    private let claudeService = ClaudeService.shared
     private static let opacityLevels: [Double] = [1.0, 0.80, 0.40]
 
     var body: some View {

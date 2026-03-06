@@ -39,6 +39,11 @@ final class AppSettings {
     var hasClaudeKey: Bool { !claudeAPIKey.isEmpty }
     var hasDeepgramKey: Bool { !deepgramAPIKey.isEmpty }
 
+    // Thread-safe static accessors for use from actors/background contexts
+    static var whisperKey: String { UserDefaults.standard.string(forKey: "whisperAPIKey") ?? "" }
+    static var claudeKey: String { UserDefaults.standard.string(forKey: "claudeAPIKey") ?? "" }
+    static var deepgramKey: String { UserDefaults.standard.string(forKey: "deepgramAPIKey") ?? "" }
+
     private init() {
         self.whisperAPIKey = defaults.string(forKey: "whisperAPIKey") ?? ""
         self.claudeAPIKey = defaults.string(forKey: "claudeAPIKey") ?? ""

@@ -40,7 +40,7 @@ final class RecordingCoordinator {
         currentPartial = ""
         recordingStartDate = .now
 
-        let apiKey = APIKeyManager.whisperAPIKey
+        let apiKey = AppSettings.whisperKey
         print("[Recording] Starting... Whisper API key present: \(!apiKey.isEmpty)")
 
         guard !apiKey.isEmpty else {
