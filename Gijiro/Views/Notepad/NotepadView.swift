@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import AppKit
 
 struct NotepadView: View {
     @Environment(\.modelContext) private var modelContext
@@ -35,22 +34,10 @@ private extension NotepadView {
                 .padding(.top, 10)
                 .padding(.bottom, 24)
 
-            ZStack(alignment: .topLeading) {
-                if meeting.userNotes.isEmpty {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Write notes")
-                            .font(.system(size: 16, weight: .light))
-                            .foregroundStyle(.tertiary)
-                        Text("Type  /  for commands")
-                            .font(.system(size: 13, weight: .regular))
-                            .foregroundStyle(.tertiary)
-                    }
-                    .disabled(true)
-                    .padding(.horizontal, 4)
-                }
-                MarkdownTextEditor(text: $meeting.userNotes)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            TextEditor(text: $meeting.userNotes)
+                .font(.system(size: 15))
+                .scrollContentBackground(.hidden)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             if let augmentError {
                 Text(augmentError)
