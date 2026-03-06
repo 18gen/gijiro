@@ -162,8 +162,9 @@ struct MarkdownStyler {
 
         // --- Lists (matching visual prefixes) ---
 
+        let S = BlockCommand.Symbols.self
         // To-Do: ☐ item, ☑ item
-        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)(☐ |☑ )(.*)$", options: .anchorsMatchLines) {
+        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)(\(S.todoUnchecked) |\(S.todoChecked) )(.*)$", options: .anchorsMatchLines) {
             rules.append(MarkdownRule(regex: regex) { match, ts in
                 let paraStyle = NSMutableParagraphStyle()
                 paraStyle.lineSpacing = theme.bodyLineSpacing
@@ -174,7 +175,7 @@ struct MarkdownStyler {
         }
 
         // Unordered: • item
-        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)(• )(.*)$", options: .anchorsMatchLines) {
+        if let regex = try? NSRegularExpression(pattern: "^([ \\t]*)(\(S.bullet) )(.*)$", options: .anchorsMatchLines) {
             rules.append(MarkdownRule(regex: regex) { match, ts in
                 let paraStyle = NSMutableParagraphStyle()
                 paraStyle.lineSpacing = theme.bodyLineSpacing

@@ -54,16 +54,23 @@ enum BlockCommand: String, CaseIterable, Identifiable {
 
     var visualPrefix: String {
         switch self {
-        case .bulletList:   return "• "
+        case .bulletList:   return "\(Symbols.bullet) "
         case .numberedList: return "1. "
-        case .todoList:     return "☐ "
+        case .todoList:     return "\(Symbols.todoUnchecked) "
         default:            return prefix
         }
     }
 
+    // Canonical visual symbols for list indicators
+    enum Symbols {
+        static let bullet = "•"
+        static let todoUnchecked = "☐"
+        static let todoChecked = "☑"
+    }
+
     // Regex to detect any existing block prefix at line start (visual prefixes)
     static let prefixPattern = try! NSRegularExpression(
-        pattern: #"^(#{1,3} |☐ |☑ |• |\d+\. )"#,
+        pattern: "^(#{1,3} |\(Symbols.todoUnchecked) |\(Symbols.todoChecked) |\(Symbols.bullet) |\\d+\\. )",
         options: .anchorsMatchLines
     )
 }
